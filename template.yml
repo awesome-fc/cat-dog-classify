@@ -1,0 +1,38 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  classify:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      NasConfig: Auto
+      LogConfig:
+        Project: 'image-sz-pro'
+        Logstore: 'fc-log'
+    cat-dog:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Initializer: predict.initializer
+        InitializationTimeout: 300
+        Handler: predict.handler
+        Runtime: python3
+        CodeUri: './code'
+        EnvironmentVariables:
+          model_path: /mnt/auto/model
+        Timeout: 120
+        MemorySize: 1024
+      Events:
+        http-test:
+          Type: HTTP
+          Properties:
+            Qualifier: LATEST
+            AuthType: ANONYMOUS
+            Methods: ['GET', 'POST', 'PUT']
+  sz.mofangdegisn.cn:
+    Type: 'Aliyun::Serverless::CustomDomain'
+    Properties:
+      Protocol: HTTP
+      RouteConfig:
+        Routes: 
+          '/*':
+            ServiceName: classify
+            FunctionName: cat-dog

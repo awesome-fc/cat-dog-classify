@@ -1,0 +1,105 @@
+<!doctype html>
+<title>Cat Dog Image Classifier</title>
+<head>
+    <style type="text/css">
+        .preview_box {
+            margin: auto;
+            height: 256px;
+            width: 256px;
+            background-color: powderblue;
+        }
+        .main{
+            text-align: center; /*让div内部文字居中*/
+            background-color: #fff;
+            border-radius: 20px;
+            width: 800px;
+            height: 600px;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        
+        .p-button { /* 按钮美化 */
+            width: 150px; /* 宽度 */
+            height: 35px; /* 高度 */
+            border-width: 0px; /* 边框宽度 */
+            border-radius: 3px; /* 边框半径 */
+            background: #1E90FF; /* 背景颜色 */
+            cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+            outline: none; /* 不显示轮廓线 */
+            font-family: Microsoft YaHei; /* 设置字体 */
+            color: white; /* 字体颜色 */
+            font-size: 17px; /* 字体大小 */
+        }
+        .p-button:hover { /* 鼠标移入按钮范围时改变颜色 */
+            background: #5599FF;
+        }
+        .file {
+            position: relative;
+            display: inline-block;
+            background: #D0EEFF;
+            border: 1px solid #99D3F5;
+            border-radius: 4px;
+            padding: 4px 12px;
+            overflow: hidden;
+            color: #1E88C7;
+            text-decoration: none;
+            text-indent: 0;
+            line-height: 20px;
+        }
+        .file input {
+            position: absolute;
+            font-size: 100px;
+            right: 0;
+            top: 0;
+            opacity: 0;
+        }
+        .file:hover {
+            background: #AADFFD;
+            border-color: #78C3F3;
+            color: #004974;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<div class="main">
+    <h1>Cat Dog Image Classifier</h1>
+    <div class="preview_box">
+        <img src="" id="show" width="100%">
+    </div>
+    
+    <br></br>
+    
+    <form method=post enctype=multipart/form-data>
+    <input type=file class="file" name=file onchange="changepic(this)">
+    <br></br>
+    <div>
+        <input type=submit value=Predict class="p-button">
+    </div>
+    </form>
+    
+    <br></br>
+    <div>
+        <label>result: {fc-result}</label>
+    </div>
+</div>
+<script>
+    function changepic(obj) {
+        var newsrc=getObjectURL(obj.files[0]);
+        document.getElementById('show').src=newsrc;
+    }
+    function getObjectURL(file) {
+        var url = null ;
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url ;
+    }
+</script>
