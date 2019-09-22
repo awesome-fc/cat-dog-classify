@@ -24,15 +24,14 @@ Resources:
         http-test:
           Type: HTTP
           Properties:
-            Qualifier: LATEST
             AuthType: ANONYMOUS
             Methods: ['GET', 'POST', 'PUT']
-  sz.mofangdegisn.cn:
-    Type: 'Aliyun::Serverless::CustomDomain'
-    Properties:
-      Protocol: HTTP
-      RouteConfig:
-        Routes: 
-          '/*':
-            ServiceName: classify
-            FunctionName: cat-dog
+  # sz.mofangdegisn.cn:
+  #   Type: 'Aliyun::Serverless::CustomDomain'
+  #   Properties:
+  #     Protocol: HTTP
+  #     RouteConfig:
+  #       Routes: 
+  #         '/*':
+  #           ServiceName: classify
+  #           FunctionName: cat-dog
