@@ -15,7 +15,7 @@ Resources:
         InitializationTimeout: 300
         Handler: predict.handler
         Runtime: python3
-        CodeUri: './code'
+        CodeUri: './'
         EnvironmentVariables:
           model_path: /mnt/auto/model
         Timeout: 120
@@ -24,6 +24,7 @@ Resources:
         http-test:
           Type: HTTP
           Properties:
+            Qualifier: LATEST
             AuthType: ANONYMOUS
             Methods: ['GET', 'POST', 'PUT']
   # sz.mofangdegisn.cn:

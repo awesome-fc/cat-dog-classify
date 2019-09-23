@@ -1,0 +1,6 @@
+pressureTest/
+*.jpg
+.env
+.fun
+.pyc
+.Funfile.generated.dockerfile

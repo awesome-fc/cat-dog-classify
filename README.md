@@ -3,14 +3,14 @@
 Dog and cat image classifier with deep learning.
 
 ## Example:
-| <img src="code/test_dog.jpg?raw=true" width="170">|<img src="code/test_cat.jpg?raw=true" width="200">|
+| <img src="test_dog.jpg?raw=true" width="170">|<img src="test_cat.jpg?raw=true" width="200">|
 |:-:|:-:|
 |Dog: 0.9634414<br/>Cat: 0.01574309|Cat: 0.9599058<br/>Dog: 0.0357831|
 
 [http://sz.mofangdegisn.cn](http://sz.mofangdegisn.cn)
 
 ## Test Picture
-[dog.jpg](https://raw.githubusercontent.com/awesome-fc/cat-dog-classify/master/code/test_dog.jpg)  |  [cat.jpg](https://raw.githubusercontent.com/awesome-fc/cat-dog-classify/master/code/test_cat.jpg)
+[dog.jpg](https://raw.githubusercontent.com/awesome-fc/cat-dog-classify/master/test_dog.jpg)  |  [cat.jpg](https://raw.githubusercontent.com/awesome-fc/cat-dog-classify/master/test_cat.jpg)
 
 ## 部署到函数计算
 
@@ -75,13 +75,17 @@ fun deploy
 ```
 
 > 注: template.yml 注释的部分为自定义域名的配置, 如果想在 fun deploy 中完成这个部署工作:
-  - 先去[域名解析](dc.console.aliyun.com), 如在示例中, 将域名 `sz.mofangdegisn.cn` 解析到 `123456.cn-hangzhou.fc.aliyuncs.com`, 对应的域名、accountId 和 region 修改成自己的
+  - 先去[域名解析](https://dc.console.aliyun.com), 如在示例中, 将域名 `sz.mofangdegisn.cn` 解析到 `123456.cn-hangzhou.fc.aliyuncs.com`, 对应的域名、accountId 和 region 修改成自己的
 
   - 去掉 template.yml 中的注释, 修改成自己的域名
 
   - 执行 `fun deploy`
 
+[Fun操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/fun.mp4?spm=5176.8466032.0.dopenurl.508d1450uttPXp&file=fun.mp4)
+
 ## 使用预留消除冷启动毛刺
+
+[预留操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/provision.mp4?spm=5176.8466032.0.dopenurl.508d1450uttPXp&file=provision.mp4)
 
 函数计算具有动态伸缩的特性， 根据并发请求量，自动弹性扩容出执行环境来执行环境，在这个典型的深度学习示例中，import keras 消耗的时间很长 ， 在我们设置的 1 G 规格的函数中， 并发访问的时候时间10s左右， 有时甚至20s+
 

@@ -1,8 +1,4 @@
 RUNTIME python3
-COPY . /code
-WORKDIR /code
-RUN rm -rf .fun/nas/auto-default/classify/model
-RUN mv /code/model .fun/nas/auto-default/classify/
 RUN fun-install pip install flask==1.1.1 -t .fun/nas/auto-default/classify
 RUN fun-install pip install scipy==1.1.0 -t .fun/nas/auto-default/classify
 RUN fun-install pip install Pillow -t .fun/nas/auto-default/classify
@@ -11,3 +7,7 @@ RUN fun-install pip install scikit-image -t .fun/nas/auto-default/classify
 RUN fun-install pip install keras -t .fun/nas/auto-default/classify
 RUN fun-install pip install h5py -t .fun/nas/auto-default/classify
 RUN fun-install pip install tensorflow==1.13.1 -t .fun/nas/auto-default/classify
+COPY ./model /code/model
+WORKDIR /code
+RUN rm -rf .fun/nas/auto-default/classify/model
+RUN mv /code/model .fun/nas/auto-default/classify/
