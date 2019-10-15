@@ -81,11 +81,11 @@ fun deploy
 
   - 执行 `fun deploy`
 
-[Fun操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/fun.mp4?spm=5176.8466032.0.dopenurl.508d1450uttPXp&file=fun.mp4)
+[Fun操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/fun.mp4)
 
 ## 使用预留消除冷启动毛刺
 
-[预留操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/provision.mp4?spm=5176.8466032.0.dopenurl.508d1450uttPXp&file=provision.mp4)
+[预留操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/provision.mp4)
 
 函数计算具有动态伸缩的特性， 根据并发请求量，自动弹性扩容出执行环境来执行环境，在这个典型的深度学习示例中，import keras 消耗的时间很长 ， 在我们设置的 1 G 规格的函数中， 并发访问的时候时间10s左右， 有时甚至20s+
 
