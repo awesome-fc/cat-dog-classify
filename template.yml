@@ -6,7 +6,7 @@ Resources:
     Properties:
       NasConfig: Auto
       LogConfig:
-        Project: 'image-sz-pro'
+        Project: 'sz-pro'
         Logstore: 'fc-log'
     cat-dog:
       Type: 'Aliyun::Serverless::Function'
@@ -27,6 +27,17 @@ Resources:
             Qualifier: LATEST
             AuthType: ANONYMOUS
             Methods: ['GET', 'POST', 'PUT']
+
+  sz-pro:
+    Type: 'Aliyun::Serverless::Log'
+    Properties:
+      Description: 'fc serverless ai project'
+    fc-log:
+      Type: 'Aliyun::Serverless::Log::Logstore'
+      Properties:
+        TTL: 10
+        ShardCount: 2
+
   # sz.mofangdegisn.cn:
   #   Type: 'Aliyun::Serverless::CustomDomain'
   #   Properties:
