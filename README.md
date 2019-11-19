@@ -21,6 +21,12 @@ Dog and cat image classifier with deep learning.
 
 - [开发函数计算的正确姿势 —— 使用 Fun NAS 管理 NAS 资源](https://yq.aliyun.com/articles/712700)
 
+#### 准备工作
+
+[免费开通函数计算](http://statistics.cn-shanghai.1221968287646227.cname-test.fc.aliyun-inc.com/?title=ServerlessAI&theme=ServerlessAI&author=rsong&type=click&url=http://fc.console.aliyun.com) ，按量付费，函数计算有很大的免费额度。
+
+[免费开通文件存储服务NAS](https://nas.console.aliyun.com/)， 按量付费
+
 #### 1. clone 该工程
 
 ```bash
@@ -64,7 +70,7 @@ fun nas ls nas:///mnt/auto/
 
 #### 5. fun deploy 部署函数到指定的region
 
-修改 template.yml LogConfig 中的 Project, 任意取一个不会重复的名字即可， 然后执行
+修改 template.yml LogConfig 中的 Project, 任意取一个不会重复的名字即可，有两处需要同时一起修改，然后执行
 
 ```bash
 fun deploy
