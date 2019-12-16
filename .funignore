@@ -4,3 +4,10 @@ pressureTest/
 .fun
 .pyc
 .Funfile.generated.dockerfile
+.env_example
+Funfile
+README.md
+model
+pressureTest
+template.packaged.yml
+template.yml

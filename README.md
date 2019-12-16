@@ -23,7 +23,7 @@ Dog and cat image classifier with deep learning.
 
 #### 准备工作
 
-[免费开通函数计算](http://statistics.cn-shanghai.1221968287646227.cname-test.fc.aliyun-inc.com/?title=ServerlessAI&theme=ServerlessAI&author=rsong&type=click&url=http://fc.console.aliyun.com) ，按量付费，函数计算有很大的免费额度。
+[免费开通函数计算](https://statistics.functioncompute.com/?title=ServerlessAI&theme=ServerlessAI&author=rsong&src=article&url=http://fc.console.aliyun.com) ，按量付费，函数计算有很大的免费额度。
 
 [免费开通文件存储服务NAS](https://nas.console.aliyun.com/)， 按量付费
 
@@ -57,6 +57,7 @@ root@66fb3ad27a4c: du -sm .fun
 #### 4. 将下载的依赖的代码包上传到 nas
 
 ``` bash
+fun nas init
 fun nas sync
 fun nas ls nas:///mnt/auto/
 ```
