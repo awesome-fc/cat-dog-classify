@@ -1,0 +1,262 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Parameters:
+  DomainName:
+    Type: String
+    Description: custom domain name
+Resources:
+  classify:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      NasConfig:
+        UserId: 10003
+        GroupId: 10003
+        MountPoints:
+          - ServerAddr:
+              'Fn::Join':
+                - ''
+                - - Ref: MountTarget
+                  - ':/'
+                  - classify
+            MountDir: /mnt/auto
+      LogConfig:
+        Project: fc-ai-demo
+        Logstore: fc-log
+      VpcConfig:
+        VpcId:
+          Ref: Vpc
+        VSwitchIds:
+          - Ref: VSwitch
+        SecurityGroupId:
+          Ref: SecurityGroup
+    cat-dog:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Initializer: predict.initializer
+        InitializationTimeout: 300
+        Handler: predict.handler
+        Runtime: python3
+        CodeUri: >-
+          oss://fun-gen-cn-shenzhen-1986114430573743/2d404332e0ea41605db4a8179a829ce9
+        EnvironmentVariables:
+          model_path: /mnt/auto/model
+          PYTHONPATH: >-
+            /mnt/auto/python/lib/python2.7/site-packages:/mnt/auto/python/lib/python3.6/site-packages
+        Timeout: 120
+        MemorySize: 1024
+      Events:
+        http-test:
+          Type: HTTP
+          Properties:
+            Qualifier: LATEST
+            AuthType: ANONYMOUS
+            Methods:
+              - GET
+              - POST
+              - PUT
+  fc-ai-demo:
+    Type: 'Aliyun::Serverless::Log'
+    Properties:
+      Description: fc serverless ai project
+    fc-log:
+      Type: 'Aliyun::Serverless::Log::Logstore'
+      Properties:
+        TTL: 10
+        ShardCount: 1
+  ai-interface-domain:
+    Type: 'Aliyun::Serverless::CustomDomain'
+    Properties:
+      Protocol: HTTP
+      RouteConfig:
+        Routes:
+          /*:
+            ServiceName:
+              'Fn::GetAtt':
+                - classify
+                - ServiceName
+            FunctionName:
+              'Fn::GetAtt':
+                - classifycat-dog
+                - FunctionName
+      DomainName:
+        Ref: DomainName
+  classify-NasCpInvoker:
+    Type: 'ALIYUN::FC::FunctionInvoker'
+    DependsOn: MountTarget
+    Properties:
+      FunctionName:
+        'Fn::GetAtt':
+          - NasNasCpFunc
+          - FunctionName
+      ServiceName:
+        'Fn::GetAtt':
+          - Nas
+          - ServiceName
+      Event:
+        'Fn::Join':
+          - ''
+          - - '{"dst": "/mnt/nas_dependencies/'
+            - classify
+            - '", "bucket": "'
+            - fun-gen-cn-shenzhen-1986114430573743
+            - >-
+              ", "objectNames": ["55d4971598ca127a4a5db0ec3e20d24d"], "rosCurl":
+              "
+            - 'Fn::GetAtt':
+                - WaitConHandle
+                - CurlCli
+            - '"}'
+      Async: true
+      ExecuteVersion: 1
+  Vpc:
+    Type: 'ALIYUN::ECS::VPC'
+    Properties:
+      Description: used for FC Application Repository
+      CidrBlock: 10.0.0.0/8
+      VpcName:
+        Ref: 'ALIYUN::StackName'
+  SecurityGroup:
+    Type: 'ALIYUN::ECS::SecurityGroup'
+    Properties:
+      SecurityGroupName:
+        Ref: 'ALIYUN::StackName'
+      VpcId:
+        Ref: Vpc
+  VSwitch:
+    Type: 'ALIYUN::ECS::VSwitch'
+    Properties:
+      ZoneId:
+        'Fn::FindInMap':
+          - RegionMap
+          - Ref: 'ALIYUN::Region'
+          - ZoneId
+      VpcId:
+        Ref: Vpc
+      CidrBlock: 10.20.0.0/16
+  FileSystem:
+    Type: 'ALIYUN::NAS::FileSystem'
+    Properties:
+      StorageType: Performance
+      Description: used_for_fun
+      ProtocolType: NFS
+  MountTarget:
+    Type: 'ALIYUN::NAS::MountTarget'
+    Properties:
+      Status: Active
+      VpcId:
+        Ref: Vpc
+      NetworkType: Vpc
+      VSwitchId:
+        Ref: VSwitch
+      AccessGroupName: DEFAULT_VPC_GROUP_NAME
+      FileSystemId:
+        Ref: FileSystem
+  Nas:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: download dependences from oss and upload to nas.
+      Policies:
+        - AliyunOssFullAccess
+      VpcConfig:
+        VpcId:
+          Ref: Vpc
+        VSwitchIds:
+          - Ref: VSwitch
+        SecurityGroupId:
+          Ref: SecurityGroup
+      NasConfig:
+        UserId: 10003
+        GroupId: 10003
+        MountPoints:
+          - ServerAddr:
+              'Fn::Join':
+                - ''
+                - - Ref: MountTarget
+                  - ':/'
+            MountDir: /mnt/nas_dependencies
+    NasCpFunc:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: index.cpFromOssToNasHandler
+        Runtime: nodejs8
+        CodeUri: >-
+          oss://fun-gen-cn-shenzhen-1986114430573743/55c420080e83c77496c036ba5bf92070
+        MemorySize: 3072
+        Timeout: 300
+  WaitCondition:
+    Type: 'ALIYUN::ROS::WaitCondition'
+    Properties:
+      Count: 1
+      Handle:
+        Ref: WaitConHandle
+      Timeout: 600
+    DependsOn: Nas
+  WaitConHandle:
+    Type: 'ALIYUN::ROS::WaitConditionHandle'
+    Properties:
+      Mode: Full
+      Count: -1
+Outputs:
+  classify-Event:
+    Description: function invoke event
+    Value:
+      'Fn::Join':
+        - ''
+        - - '{"dst": "/mnt/nas_dependencies/'
+          - classify
+          - '", "bucket": "'
+          - fun-gen-cn-shenzhen-1986114430573743
+          - '", "objectNames": ["55d4971598ca127a4a5db0ec3e20d24d"], "rosCurl": "'
+          - 'Fn::GetAtt':
+              - WaitConHandle
+              - CurlCli
+          - '"}'
+  CurlCli:
+    Value:
+      'Fn::GetAtt':
+        - WaitConHandle
+        - CurlCli
+  Data:
+    Value:
+      'Fn::GetAtt':
+        - WaitCondition
+        - Data
+  ErrorData:
+    Value:
+      'Fn::GetAtt':
+        - WaitCondition
+        - ErrorData
+Mappings:
+  RegionMap:
+    cn-shanghai:
+      ZoneId: cn-shanghai-e
+    cn-hangzhou:
+      ZoneId: cn-hangzhou-g
+    cn-qingdao:
+      ZoneId: cn-qingdao-c
+    cn-beijing:
+      ZoneId: cn-beijing-c
+    cn-zhangjiakou:
+      ZoneId: cn-zhangjiakou-b
+    cn-huhehaote:
+      ZoneId: cn-huhehaote-a
+    cn-shenzhen:
+      ZoneId: cn-shenzhen-d
+    cn-hongkong:
+      ZoneId: cn-hongkong-c
+    ap-southeast-1:
+      ZoneId: ap-southeast-1a
+    ap-southeast-2:
+      ZoneId: ap-southeast-2a
+    ap-southeast-5:
+      ZoneId: ap-southeast-5a
+    ap-northeast-1:
+      ZoneId: ap-northeast-1a
+    eu-central-a:
+      ZoneId: eu-central-a
+    us-west-1:
+      ZoneId: us-west-1a
+    us-east-1:
+      ZoneId: us-east-1a
+    ap-south-1:
+      ZoneId: ap-south-1a

@@ -1,12 +1,16 @@
 ROSTemplateFormatVersion: '2015-09-01'
 Transform: 'Aliyun::Serverless-2018-04-03'
+Parameters:
+  DomainName:
+    Type: String
+    Description: 'custom domain name'
 Resources:
   classify:
     Type: 'Aliyun::Serverless::Service'
     Properties:
       NasConfig: Auto
       LogConfig:
-        Project: 'log-ai-pro'
+        Project: 'fc-ai-demo'
         Logstore: 'fc-log'
     cat-dog:
       Type: 'Aliyun::Serverless::Function'
@@ -18,6 +22,7 @@ Resources:
         CodeUri: './'
         EnvironmentVariables:
           model_path: /mnt/auto/model
+          PYTHONPATH: /mnt/auto/python/lib/python2.7/site-packages:/mnt/auto/python/lib/python3.6/site-packages
         Timeout: 120
         MemorySize: 1024
       Events:
@@ -27,8 +32,8 @@ Resources:
             Qualifier: LATEST
             AuthType: ANONYMOUS
             Methods: ['GET', 'POST', 'PUT']
-
-  log-ai-pro:
+  
+  fc-ai-demo:
     Type: 'Aliyun::Serverless::Log'
     Properties:
       Description: 'fc serverless ai project'
@@ -38,13 +43,21 @@ Resources:
         TTL: 10
         ShardCount: 1
 
-  my_domain:
+  ai-interface-domain:
     Type: 'Aliyun::Serverless::CustomDomain'
     Properties:
-      DomainName: Auto
       Protocol: HTTP
       RouteConfig:
         Routes: 
-          '/*':
-            ServiceName: classify
-            FunctionName: cat-dog
+          /*:
+            ServiceName: 
+              'Fn::GetAtt':
+                - classify
+                - ServiceName
+            FunctionName: 
+              'Fn::GetAtt':
+                - classifycat-dog
+                - FunctionName
+      DomainName:
+        Ref: DomainName
+
