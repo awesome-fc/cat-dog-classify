@@ -4,7 +4,7 @@ RUN fun-install pip install scipy==1.1.0 -t /mnt/auto
 RUN fun-install pip install Pillow -t /mnt/auto
 RUN fun-install pip install scikit-learn -t /mnt/auto
 RUN fun-install pip install scikit-image -t /mnt/auto
-RUN fun-install pip install keras -t /mnt/auto
+RUN fun-install pip install keras==2.2.4 -t /mnt/auto
 RUN fun-install pip install h5py -t /mnt/auto
 RUN fun-install pip install tensorflow==1.13.1 -t /mnt/auto
 COPY ./model /mnt/auto/model
