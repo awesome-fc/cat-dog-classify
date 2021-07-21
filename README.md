@@ -12,80 +12,6 @@ Dog and cat image classifier with deep learning.
 ## Test Picture
 [dog.jpg](https://raw.githubusercontent.com/awesome-fc/cat-dog-classify/master/test_dog.jpg)  |  [cat.jpg](https://raw.githubusercontent.com/awesome-fc/cat-dog-classify/master/test_cat.jpg)
 
-## 基于fun的函数计算部署
-
-**Reference:**
-- [开发函数计算的正确姿势——tensorflow serving](https://yq.aliyun.com/articles/702739)
-
-- [开发函数计算的正确姿势 —— Fun 自动化 NAS 配置](https://yq.aliyun.com/articles/712693)
-
-- [开发函数计算的正确姿势 —— 使用 Fun NAS 管理 NAS 资源](https://yq.aliyun.com/articles/712700)
-
-#### 准备工作
-
-[免费开通函数计算](https://statistics.functioncompute.com/?title=ServerlessAI&theme=ServerlessAI&author=rsong&src=article&url=http://fc.console.aliyun.com) ，按量付费，函数计算有很大的免费额度。
-
-[免费开通文件存储服务NAS](https://nas.console.aliyun.com/)， 按量付费
-
-#### 1. clone 该工程
-
-```bash
-git clone https://github.com/awesome-fc/cat-dog-classify.git
-```
-
-复制 `.env_example` 文件为 `.env`, 并且修改 `.env` 中的信息为自己的信息
-
-#### 2. 安装最新版本的 fun
-[fun 安装手册](https://github.com/alibaba/funcraft/blob/master/docs/usage/installation-zh.md)
-
-#### 3. fun 安装依赖包
-执行 `fun install -v`, fun 会根据 Funfile 中定义的逻辑安装相关的依赖包
-
-```bash
-root@66fb3ad27a4c: ls .fun/nas/auto-default/classify
-model  python
-root@66fb3ad27a4c: du -sm .fun
-697     .fun
-```
-
-根据 Funfile 的定义, 将第三方库下载到 `.fun/nas/auto-default/classify/python` 目录下
-本地 model 目录移到 `.fun/nas/auto-default/model` 目录下
-
-从这里我们看出， 函数计算引用的代码包解压之后已经达到了 670 M, 远超过 50M 代码包限制, 解决方案是 NAS
-详情可以参考: [挂载NAS访问](https://help.aliyun.com/document_detail/87401.html), 幸运的是 fun 工具一键解决了 nas 的配置和文件上传问题.
-
-#### 4. 将下载的依赖的代码包上传到 nas
-
-``` bash
-fun nas init
-fun nas sync
-fun nas ls nas:///mnt/auto/
-```
-
-依次执行这些命令，就将本地中的 .fun/nas/auto-default 中的第三方代码包和模型文件传到 nas 中, 依次看下这几个命令的做了什么事情:
-
-- fun nas sync : 将本地nas中的内容（.fun/nas/auto-default/classify）上传到 nas 中的 classify 目录
-- fun nas ls nas:///mnt/auto/ : 查看我们是否已经正确将文件上传到了 NAS
-
-> 这些步骤成功执行后，对于函数计算执行环境来说， 此时 `/mnt/auto/` 中内容就是 nas 中的 `classify` 目录中的内容， 即本地中的 `.fun/nas/auto-default/classify` 的内容
-
-#### 5. fun deploy 部署函数到指定的region
-
-修改 template.yml LogConfig 中的 Project, 任意取一个不会重复的名字即可，有两处需要同时一起修改，然后执行
-
-```bash
-fun deploy
-```
-
-> 注: template.yml 注释的部分为自定义域名的配置, 如果想在 fun deploy 中完成这个部署工作:
-  - 先去[域名解析](https://dc.console.aliyun.com), 如在示例中, 将域名 `sz.mofangdegisn.cn` 解析到 `123456.cn-hangzhou.fc.aliyuncs.com`, 对应的域名、accountId 和 region 修改成自己的
-
-  - 去掉 template.yml 中的注释, 修改成自己的域名
-
-  - 执行 `fun deploy`
-
-[Fun操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/fun.mp4)
-
 ## 基于Serverless Devs的函数计算部署
 
 #### 准备工作
@@ -106,22 +32,28 @@ git clone https://github.com/awesome-fc/cat-dog-classify.git
 
 #### 3. s 安装依赖包
 
-执行 `s build --use-docker`, s 工具会根据 `requirements.txt` 进行相关的依赖包的安装
+如果开发机器没有安装docker，请先安装[docker](https://www.docker.com/products/docker-desktop)以拉取函数计算环境的镜像
+
+执行 `s build --use-docker`, s 工具会根据 `requirements.txt` 进行相关的依赖包的安装,
+将第三方库下载到 `.s/build/artifacts/cat-dog/classify/.s/python` 目录下
+
+从这里我们看出， 函数计算引用的代码包解压之后已经超过 100M 代码包限制, 解决方案是 NAS，
+我们将大体积的依赖和相对较大的模型参数文件放入 NAS，从而达到减少代码包体积的目的。
 
 #### 4. 将下载的依赖的代码包上传到 nas
 
 ``` bash
-s nas upload -r .s/build/artifacts/cat-dog-classfication/classify/.s/python nas:///mnt/auto/python
+s nas upload -r .s/build/artifacts/cat-dog/classify/.s/python nas:///mnt/auto/python
 s nas upload -r model nas:///mnt/auto/model
-fun nas ls nas:///mnt/auto/
+s nas command ls nas:///mnt/auto/
 ```
 
-依次执行这些命令，就将本地的第三方代码包和模型文件传到 nas 中，并删去本地依赖。
+依次执行这些命令，就将本地的第三方代码包和模型文件传到 nas 中，同时，我们仍需要手动删去本地依赖。
 
 #### 5. 部署函数到指定的region
 
 ```bash
-fun deploy
+s deploy
 ```
 
 ## 使用预留消除冷启动毛刺
