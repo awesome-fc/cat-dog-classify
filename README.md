@@ -12,7 +12,7 @@ Dog and cat image classifier with deep learning.
 ## Test Picture
 [dog.jpg](https://raw.githubusercontent.com/awesome-fc/cat-dog-classify/master/test_dog.jpg)  |  [cat.jpg](https://raw.githubusercontent.com/awesome-fc/cat-dog-classify/master/test_cat.jpg)
 
-## 部署到函数计算
+## 基于fun的函数计算部署
 
 **Reference:**
 - [开发函数计算的正确姿势——tensorflow serving](https://yq.aliyun.com/articles/702739)
@@ -85,6 +85,44 @@ fun deploy
   - 执行 `fun deploy`
 
 [Fun操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/fun.mp4)
+
+## 基于Serverless Devs的函数计算部署
+
+#### 准备工作
+
+[免费开通函数计算](https://statistics.functioncompute.com/?title=ServerlessAI&theme=ServerlessAI&author=rsong&src=article&url=http://fc.console.aliyun.com) ，按量付费，函数计算有很大的免费额度。
+
+[免费开通文件存储服务NAS](https://nas.console.aliyun.com/)， 按量付费
+
+#### 1. clone 该工程
+
+```bash
+git clone https://github.com/awesome-fc/cat-dog-classify.git
+```
+
+#### 2. 安装最新版本的 Serverless Devs
+
+[s 安装手册](https://www.serverless-devs.com/docs/install)
+
+#### 3. s 安装依赖包
+
+执行 `s build --use-docker`, s 工具会根据 `requirements.txt` 进行相关的依赖包的安装
+
+#### 4. 将下载的依赖的代码包上传到 nas
+
+``` bash
+s nas upload -r .s/build/artifacts/cat-dog-classfication/classify/.s/python nas:///mnt/auto/python
+s nas upload -r model nas:///mnt/auto/model
+fun nas ls nas:///mnt/auto/
+```
+
+依次执行这些命令，就将本地的第三方代码包和模型文件传到 nas 中，并删去本地依赖。
+
+#### 5. 部署函数到指定的region
+
+```bash
+fun deploy
+```
 
 ## 使用预留消除冷启动毛刺
 

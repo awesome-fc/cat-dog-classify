@@ -1,0 +1,47 @@
+edition: 1.0.0          #  命令行YAML规范版本，遵循语义化版本（Semantic Versioning）规范
+name: cat-dog     #  项目名称
+access: "default"  #  秘钥别名
+
+services:
+  cat-dog: #  服务名称
+    component: devsapp/fc  # 组件名称
+    props: #  组件的属性值
+      region: cn-shenzhen
+      service:
+        name: cat-dog
+        description: 'The service for classifying cats and dogs'
+        internetAccess: true
+        nasConfig: auto
+        vpcConfig: auto
+        logConfig: auto
+      function:
+        name: classify
+        description: classify the cats and dogs
+        runtime: python3
+        codeUri: ./
+        handler: predict.handler
+        initializationTimeout: 300
+        initializer: predict.initializer
+        memorySize: 1024
+        timeout: 120
+        environmentVariables:
+          PYTHONUSERBASE: /mnt/auto/python
+          model_path: /mnt/auto/model
+      triggers:
+        - name: httpTrigger
+          type: http
+          config:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
+              - PUT
+      customDomains:
+        - domainName: auto
+          protocol: HTTP
+          routeConfigs:
+            - path: /*
+              methods:
+                - GET
+                - POST
+                - PUT
