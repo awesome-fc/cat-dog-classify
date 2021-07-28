@@ -18,7 +18,7 @@ services:
         name: classify
         description: classify the cats and dogs
         runtime: python3
-        codeUri: ./
+        codeUri: ./src
         handler: predict.handler
         initializationTimeout: 300
         initializer: predict.initializer
