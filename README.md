@@ -56,7 +56,7 @@ s deploy
 
 ``` bash
 s nas upload -r .s/build/artifacts/cat-dog/classify/.s/python nas:///mnt/auto/python
-s nas upload -r model nas:///mnt/auto/model
+s nas upload -r src/model nas:///mnt/auto/model
 s nas command ls nas:///mnt/auto/
 ```
 
