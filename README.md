@@ -60,6 +60,10 @@ s nas upload -r src/model nas:///mnt/auto/model
 s nas command ls nas:///mnt/auto/
 ```
 
+之后就可以使用第 4 步骤产生的自定义域名的 url 在浏览中访问即可：
+
+![](https://img.alicdn.com/imgextra/i2/O1CN01oMwtse1CjAdnZnHEV_!!6000000000116-2-tps-980-54.png)
+
 ## 使用预留消除冷启动毛刺
 
 [预留操作视频教学示例](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/video/provision.mp4)
