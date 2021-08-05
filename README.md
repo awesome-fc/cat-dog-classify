@@ -55,9 +55,9 @@ s deploy
 分别将依赖和模型上传到 NAS，并查看 NAS 远程目录：
 
 ``` bash
-s nas upload -r .s/build/artifacts/cat-dog/classify/.s/python nas:///mnt/auto/python
-s nas upload -r src/model nas:///mnt/auto/model
-s nas command ls nas:///mnt/auto/
+s nas upload -r .s/build/artifacts/cat-dog/classify/.s/python /mnt/auto/python
+s nas upload -r src/model /mnt/auto/model
+s nas command ls /mnt/auto/
 ```
 
 之后就可以使用第 4 步骤产生的自定义域名的 url 在浏览中访问即可：
