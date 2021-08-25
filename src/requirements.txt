@@ -5,4 +5,4 @@ scikit-learn
 scikit-image
 keras==2.2.4
 h5py==2.10.0
-tensorflow==1.13.1
+tensorflow==2.5.1
