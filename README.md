@@ -42,17 +42,15 @@ git clone https://github.com/awesome-fc/cat-dog-classify.git
 从这里我们看出， 函数计算引用的代码包解压之后已经超过 100M 代码包限制, 解决方案是 NAS，
 我们将大体积的依赖和相对较大的模型参数文件放入 NAS，从而达到减少代码包体积的目的。
 
-#### 4. 部署函数到指定的region
+#### 4. 将下载的依赖的代码包上传到 NAS
 
-由于在配置文件中，我们使用了 `nasConfig: auto` 的设置，所以在将依赖文件上传到 NAS 之前，我们需要先进行服务的部署：
+- 由于我们使用了 `auto` 的 NAS 配置，在上传文件前我们需要先初始化 NAS
 
 ```bash
-s deploy
+s nas init
 ```
 
-#### 5. 将下载的依赖的代码包上传到 NAS
-
-分别将依赖和模型上传到 NAS，并查看 NAS 远程目录：
+- 分别将依赖和模型上传到 NAS，并查看 NAS 远程目录：
 
 ``` bash
 s nas upload -r .s/build/artifacts/cat-dog/classify/.s/python /mnt/auto/python
@@ -60,7 +58,13 @@ s nas upload -r src/model /mnt/auto/model
 s nas command ls /mnt/auto/
 ```
 
-之后就可以使用第 4 步骤产生的自定义域名的 url 在浏览中访问即可：
+#### 5. 部署函数到指定的region
+
+```bash
+s deploy
+```
+
+之后就可以使用部署产生的自定义域名的 url 在浏览器中访问：
 
 ![](https://img.alicdn.com/imgextra/i2/O1CN01oMwtse1CjAdnZnHEV_!!6000000000116-2-tps-980-54.png)
 
