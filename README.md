@@ -53,8 +53,8 @@ s nas init
 - 分别将依赖和模型上传到 NAS，并查看 NAS 远程目录：
 
 ``` bash
-s nas upload -r .s/build/artifacts/cat-dog/classify/.s/python /mnt/auto/python
-s nas upload -r src/model /mnt/auto/model
+s nas upload -r .s/build/artifacts/cat-dog/classify/.s/pytho/ /mnt/auto/python
+s nas upload -r src/model/ /mnt/auto/model
 s nas command ls /mnt/auto/
 ```
 
