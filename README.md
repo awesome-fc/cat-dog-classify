@@ -26,9 +26,15 @@ Dog and cat image classifier with deep learning.
 git clone https://github.com/awesome-fc/cat-dog-classify.git
 ```
 
-#### 2. 安装最新版本的 Serverless Devs
+#### 2. 安装最新版本的 Serverless Devs 并完成配置
 
-[s 安装手册](https://www.serverless-devs.com/docs/install)
+1. 针对 Mac/Linux 用户， 直接使用如下命令安装即可：
+    ```
+    $ curl -o- -L http://cli.so/install.sh | bash
+    ```
+    > 更多请参考 [s 安装手册](https://docs.serverless-devs.com/serverless-devs/install)
+
+2. [s 配置](https://docs.serverless-devs.com/serverless-devs/quick_start#%E5%AF%86%E9%92%A5%E9%85%8D%E7%BD%AE)
 
 #### 3. s 安装依赖
 
