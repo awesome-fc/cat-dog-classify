@@ -54,6 +54,7 @@ git clone https://github.com/awesome-fc/cat-dog-classify.git
 
 ```bash
 s nas init
+s deploy service
 ```
 
 - 分别将依赖和模型上传到 NAS，并查看 NAS 远程目录：
